@@ -1,13 +1,11 @@
 package openweather
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"net/http"
 	"net/url"
 	"os"
 
 	"github.com/rs/zerolog/log"
+	"github.com/zsomborjoel/weatherxz/pkg/city"
 )
 
 type OpenWeatherForecastResponse struct {
@@ -89,38 +87,47 @@ type City struct {
 	Sunset     int    `json:"sunset"`
 }
 
-func FetchWeatherForecast() {
-	log.Info().Msg("Info message")
+func FetchForAllCities() {
+	log.Info().Msg("WeatherForecast fetch for all cities started")
+
+	cis, err := city.GetAllCity()
+	if err != nil {
+		log.Error().Stack().Err(err)
+	}
+
+	for _, ci := range cis {
+		log.Info().Msg(string(ci.Name))
+	}
+	log.Info().Msg("WeatherForecast fetch for all cities ended")
+}
+
+func fetchWeatherForecast(city string) (owfr OpenWeatherForecastResponse) {
 	ofu := os.Getenv("OPEN_WEATHER_URL")
-	appid := os.Getenv("OPEN_WEATHER_APP_ID")
-	log.Info().Msg(ofu)
-	log.Info().Msg(appid)
-	city := "hanoi"
+	aid := os.Getenv("OPEN_WEATHER_APP_ID")
 
 	base, err := url.Parse(ofu)
 	if err != nil {
-		log.Error().Err(err)
+		log.Error().Stack().Err(err)
 	}
 
 	params := url.Values{}
 	params.Add("q", city)
-	params.Add("appid", appid)
+	params.Add("appid", aid)
 	base.RawQuery = params.Encode()
 
-	response, err := http.Get(base.String())
-	if err != nil {
-		log.Error().Err(err)
-	}
+	/*
+		res, err := http.Get(base.String())
+		if err != nil {
+			log.Error().Stack().Err(err)
+		}
 
-	data, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Error().Err(err)
-	}
+		data, err := io.ReadAll(res.Body)
+		if err != nil {
+			log.Error().Stack().Err(err)
+		}
 
-	log.Info().Msg(string(data))
-
-	var owfr OpenWeatherForecastResponse
-	json.Unmarshal(data, &owfr)
-
-	log.Info().Msg(owfr.City.Name)
+		var owfr OpenWeatherForecastResponse
+		json.Unmarshal(data, &owfr)
+	*/
+	return
 }

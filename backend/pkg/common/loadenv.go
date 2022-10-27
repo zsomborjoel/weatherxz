@@ -1,7 +1,7 @@
 package common
 
 import (
-	"log"
+	"github.com/rs/zerolog/log"
 
 	"github.com/joho/godotenv"
 )
@@ -9,6 +9,6 @@ import (
 func LoadEnvVariables() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal().Stack().Msg("Error loading .env file")
 	}
 }

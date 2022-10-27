@@ -3,9 +3,9 @@ package common
 import (
 	"os"
 
+	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"github.com/rs/zerolog/log"
 )
 
 var DB *gorm.DB
@@ -16,7 +16,7 @@ func Init() *gorm.DB {
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Error().Err(err).Msg("db err: (Init) ")
+		log.Error().Stack().Err(err).Msg("db err: (Init)")
 	}
 
 	return DB
