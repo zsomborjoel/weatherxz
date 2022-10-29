@@ -17,8 +17,8 @@ type Country struct {
 type City struct {
 	gorm.Model
 	Name       string `gorm:"type:varchar(255);unique;not null"`
-	CoordLat   string `gorm:"type:varchar(50)"`
-	CoordLon   string `gorm:"type:varchar(50)"`
+	CoordLat   float64 
+	CoordLon   float64
 	Population int
 	TimeZone   int
 	Sunrise    int

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/zsomborjoel/weatherxz/pkg/city"
+	"github.com/zsomborjoel/weatherxz/pkg/clients/openweather"
 	"github.com/zsomborjoel/weatherxz/pkg/common"
 	"gorm.io/gorm"
 )
@@ -21,7 +22,8 @@ func main() {
 
 	db := common.Init()
 	Migrate(db)
-
+	openweather.FetchForAllCities()
+	
 	r := gin.Default()
 
 	r.Run()
