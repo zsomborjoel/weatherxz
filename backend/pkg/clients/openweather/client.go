@@ -7,16 +7,18 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/rs/zerolog/log"
 	"github.com/zsomborjoel/weatherxz/pkg/city"
+	"github.com/zsomborjoel/weatherxz/pkg/weather"
 )
 
 type OpenWeatherForecastResponse struct {
 	Cod     string   `json:"cod"`
 	Message int      `json:"message"`
 	Cnt     int      `json:"cnt"`
-	List    []list   `json:"list"`
+	List    []List   `json:"list"`
 	City    cityinfo `json:"city"`
 }
 
@@ -32,7 +34,7 @@ type main struct {
 	TempKf    float64 `json:"temp_kf"`
 }
 
-type weather struct {
+type weatherInfo struct {
 	ID          int    `json:"id"`
 	Main        string `json:"main"`
 	Description string `json:"description"`
@@ -50,7 +52,7 @@ type wind struct {
 }
 
 type rain struct {
-	ThreeH float64 `json:"3h"`
+	OneH float64 `json:"1h"`
 }
 
 type sys struct {
@@ -58,21 +60,21 @@ type sys struct {
 }
 
 type snow struct {
-	ThreeH float64 `json:"3h"`
+	OneH float64 `json:"1h"`
 }
 
-type list struct {
-	Dt         int       `json:"dt"`
-	Main       main      `json:"main"`
-	Weather    []weather `json:"weather"`
-	Clouds     clouds    `json:"clouds"`
-	Wind       wind      `json:"wind"`
-	Visibility int       `json:"visibility"`
-	Pop        float64   `json:"pop"`
-	Rain       rain      `json:"rain,omitempty"`
-	Sys        sys       `json:"sys"`
-	DtTxt      string    `json:"dt_txt"`
-	Snow       snow      `json:"snow,omitempty"`
+type List struct {
+	Dt         int           `json:"dt"`
+	Main       main          `json:"main"`
+	Weather    []weatherInfo `json:"weather"`
+	Clouds     clouds        `json:"clouds"`
+	Wind       wind          `json:"wind"`
+	Visibility int           `json:"visibility"`
+	Pop        float64       `json:"pop"`
+	Rain       rain          `json:"rain,omitempty"`
+	Sys        sys           `json:"sys"`
+	DtTxt      string        `json:"dt_txt"`
+	Snow       snow          `json:"snow,omitempty"`
 }
 
 type coord struct {
@@ -91,33 +93,86 @@ type cityinfo struct {
 	Sunset     int    `json:"sunset"`
 }
 
+const ITERATION_LEVEL = 50
+
 func FetchForAllCities() {
 	log.Info().Msg("WeatherForecast fetch for all cities started")
 
-	cis, err := city.GetAllCity()
+	currCi, err := city.GetAllCity()
 	if err != nil {
 		log.Error().Stack().Err(err)
 	}
 
-	for _, ci := range cis {
-		log.Info().Msg(string(ci.Name))
+	var savableWe = []weather.Weather{}
+	for i, ci := range currCi {
+		if i%ITERATION_LEVEL == 0 && len(savableWe) > 0 {
+			weather.SaveAll(savableWe)
+			savableWe = []weather.Weather{}
 
-		var f OpenWeatherForecastResponse
-		f.City.Coord.Lat = 6
-		fmt.Println(f)
-		//f := fetchWeatherForecast(ci.Name)
-		ci = copyForecastToCity(f, ci)
-		fmt.Println(ci.CoordLat)
+			log.Info().Msg("Forecast Fetch - sleep")
+			time.Sleep(1 * time.Minute)
+		}
+
+		log.Info().Msg(fmt.Sprintf("Currently processed city: [%s]", ci.Name))
+
+		f := fetchWeatherForecast(ci.Name)
+
+		copyToCity(&f, &ci)
+		err := city.UpdateCity(&ci)
+		if err != nil {
+			log.Error().Stack().Err(err)
+		}
+
+		for _, l := range f.List {
+			var w weather.Weather
+			copyToWeather(&l, &w)
+			w.CityId = ci.ID
+			savableWe = append(savableWe, w)
+		}
 	}
+
+	if len(savableWe) > 0 {
+		err = weather.SaveAll(savableWe)
+		if err != nil {
+			log.Error().Stack().Err(err)
+		}
+	}
+
 	log.Info().Msg("WeatherForecast fetch for all cities ended")
 }
 
-func copyForecastToCity(f OpenWeatherForecastResponse, ci city.City) (city.City) {
+func copyToCity(f *OpenWeatherForecastResponse, ci *city.City) {
 	ci.CoordLat = f.City.Coord.Lat
 	ci.CoordLon = f.City.Coord.Lon
 	ci.TimeZone = f.City.Timezone
 	ci.Sunrise = f.City.Sunset
-	return ci
+}
+
+func copyToWeather(l *List, w *weather.Weather) {
+	lastWCond := l.Weather[len(l.Weather)-1]
+
+	w.DateTime = l.Dt
+	w.Temp = l.Main.Temp
+	w.FeelsLike = l.Main.FeelsLike
+	w.TempMin = l.Main.TempMin
+	w.TempMax = l.Main.TempMax
+	w.Pressure = l.Main.Pressure
+	w.PreassureSeaLevel = l.Main.SeaLevel
+	w.PreassureGroundLevel = l.Main.GrndLevel
+	w.Humidity = l.Main.Humidity
+	w.WeatherConditionId = lastWCond.ID
+	w.WeatherConditionMain = lastWCond.Main
+	w.WeatherConditionDesc = lastWCond.Description
+	w.WeatherConditionIcon = lastWCond.Icon
+	w.Clouds = l.Clouds.All
+	w.WindSpeed = l.Wind.Speed
+	w.WindDeg = l.Wind.Deg
+	w.WindGust = l.Wind.Gust
+	w.Visibility = l.Visibility
+	w.ProbabilityOfPrecipitation = l.Pop
+	w.RainVolume = l.Rain.OneH
+	w.SnowVolume = l.Snow.OneH
+	w.PartOfDay = l.Sys.Pod
 }
 
 func fetchWeatherForecast(city string) (f OpenWeatherForecastResponse) {
@@ -135,6 +190,7 @@ func fetchWeatherForecast(city string) (f OpenWeatherForecastResponse) {
 	base.RawQuery = params.Encode()
 
 	res, err := http.Get(base.String())
+	//res, err := http.Get("https://8219bedd-cdac-4f1e-981a-597c2c69f0e8.mock.pstmn.io")
 	if err != nil {
 		log.Error().Stack().Err(err)
 	}
@@ -147,5 +203,5 @@ func fetchWeatherForecast(city string) (f OpenWeatherForecastResponse) {
 	var owfr OpenWeatherForecastResponse
 	json.Unmarshal(data, &owfr)
 
-	return
+	return owfr
 }
