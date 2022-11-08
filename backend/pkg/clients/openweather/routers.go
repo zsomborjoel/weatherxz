@@ -7,10 +7,10 @@ import (
 )
 
 func WeatherLoadRegister(router *gin.RouterGroup) {
-	router.GET("/load", WeatherLoad)
+	router.GET("/load", weatherLoad)
 }
 
-func WeatherLoad(c *gin.Context) {
+func weatherLoad(c *gin.Context) {
 	go FetchForAllCities()
-	c.JSON(http.StatusOK, "")
+	c.Writer.WriteHeader(http.StatusOK)
 }

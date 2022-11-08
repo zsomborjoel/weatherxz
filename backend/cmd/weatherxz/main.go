@@ -6,6 +6,7 @@ import (
 	"github.com/zsomborjoel/weatherxz/pkg/cities"
 	"github.com/zsomborjoel/weatherxz/pkg/clients/openweather"
 	"github.com/zsomborjoel/weatherxz/pkg/common"
+	"github.com/zsomborjoel/weatherxz/pkg/pings"
 	"github.com/zsomborjoel/weatherxz/pkg/weathers"
 	"gorm.io/gorm"
 )
@@ -27,6 +28,7 @@ func main() {
 	r := gin.Default()
 
 	v1 := r.Group("/api")
+	pings.PingRegister(v1.Group("/ping"))
 	openweather.WeatherLoadRegister(v1.Group("/weathers"))
 
 	r.Run()
