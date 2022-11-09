@@ -30,6 +30,7 @@ func main() {
 	v1 := r.Group("/api")
 	pings.PingRegister(v1.Group("/ping"))
 	openweather.WeatherLoadRegister(v1.Group("/weathers"))
+	cities.CitiesRegister(v1.Group("/cities"))
 
 	r.Run()
 }

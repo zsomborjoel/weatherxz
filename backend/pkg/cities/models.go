@@ -33,6 +33,13 @@ func AutoMigrate() {
 	db.AutoMigrate(&City{})
 }
 
+func FindOneCity(condition interface{}) (City) {
+	db := common.GetDB()
+	var c City
+	db.Where(condition).First(&c)
+	return c
+}
+
 func GetAllCountry() ([]Country, error) {
 	db := common.GetDB()
 	var countries []Country
