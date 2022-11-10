@@ -190,7 +190,6 @@ func fetchWeatherForecast(city string) (f OpenWeatherForecastResponse) {
 	base.RawQuery = params.Encode()
 
 	res, err := http.Get(base.String())
-	//res, err := http.Get("https://8219bedd-cdac-4f1e-981a-597c2c69f0e8.mock.pstmn.io")
 	if err != nil {
 		log.Error().Stack().Err(err)
 	}

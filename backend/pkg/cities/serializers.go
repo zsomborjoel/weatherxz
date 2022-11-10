@@ -18,7 +18,7 @@ type CitySerializer struct {
 }
 
 func (s *CitySerializer) Response() CityResponse {
-	response := CityResponse{
+	r := CityResponse{
 		Name:       s.Name,
 		CoordLat:   s.CoordLat,
 		CoordLon:   s.CoordLon,
@@ -27,7 +27,7 @@ func (s *CitySerializer) Response() CityResponse {
 		Sunrise:    s.Sunrise,
 		Sunset:     s.Sunset,
 	}
-	return response
+	return r
 }
 
 type CitiesSerializer struct {
@@ -36,5 +36,10 @@ type CitiesSerializer struct {
 }
 
 func (s *CitiesSerializer) Response() []CityResponse {
-	return nil
+	r := []CityResponse{}
+	for _, city := range s.Cities {
+		s := CitySerializer{s.C, city}
+		r = append(r, s.Response())
+	}
+	return r
 }
