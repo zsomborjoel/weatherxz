@@ -6,6 +6,7 @@ import (
 )
 
 type CityResponse struct {
+	ID          uint    `json:"id"`
 	Name        string  `json:"name"`
 	CoordLat    float64 `json:"coordLat"`
 	CoordLon    float64 `json:"coordLon"`
@@ -30,6 +31,7 @@ func (s *CitySerializer) Response() CityResponse {
 	}
 
 	r := CityResponse{
+		ID:          s.Model.ID,
 		Name:        s.Name,
 		CoordLat:    s.CoordLat,
 		CoordLon:    s.CoordLon,
