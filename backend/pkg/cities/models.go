@@ -40,6 +40,13 @@ func FindOneCity(condition interface{}) (City, error) {
 	return c, err
 }
 
+func FindOneCountryById(countryId uint) (Country, error) {
+	db := common.GetDB()
+	var c Country
+	err := db.Find(&c, countryId).Error
+	return c, err
+}
+
 func GetAllCountry() ([]Country, error) {
 	db := common.GetDB()
 	var countries []Country
@@ -54,20 +61,8 @@ func GetAllCity() ([]City, error) {
 	return cities, err
 }
 
-func SaveOne(data interface{}) error {
-	db := common.GetDB()
-	err := db.Save(data).Error
-	return err
-}
-
 func UpdateCity(city *City) error {
 	db := common.GetDB()
 	err := db.Model(&city).Updates(city).Error
-	return err
-}
-
-func SaveAll(data interface{}) error {
-	db := common.GetDB()
-	err := db.Create(data).Error
 	return err
 }
