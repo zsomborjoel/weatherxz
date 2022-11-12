@@ -38,14 +38,15 @@ func AutoMigrate() {
 	db.AutoMigrate(&Weather{})
 }
 
-func SaveOne(data interface{}) error {
-	db := common.GetDB()
-	err := db.Save(data).Error
-	return err
-}
-
 func SaveAll(data interface{}) error {
 	db := common.GetDB()
 	err := db.Create(data).Error
 	return err
+}
+
+func GetAllWeather(condition interface{}) ([]Weather, error) {
+	db := common.GetDB()
+	var countries []Weather
+	err := db.Where(condition).Find(&countries).Error
+	return countries, err
 }

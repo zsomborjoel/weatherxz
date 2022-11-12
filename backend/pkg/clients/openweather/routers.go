@@ -7,7 +7,7 @@ import (
 )
 
 func WeatherLoadRegister(r *gin.RouterGroup) {
-	r.GET("/load", weatherLoad)
+	r.GET("", weatherLoad)
 }
 
 func weatherLoad(c *gin.Context) {
