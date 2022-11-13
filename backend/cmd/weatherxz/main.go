@@ -25,6 +25,7 @@ func main() {
 	db := common.Init()
 	Migrate(db)
 
+	openweather.ScheduleLoad()
 	r := gin.Default()
 
 	v1 := r.Group("/api")

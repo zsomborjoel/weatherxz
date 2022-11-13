@@ -1,6 +1,8 @@
 package weathers
 
 import (
+	"time"
+
 	"github.com/zsomborjoel/weatherxz/pkg/common"
 	"gorm.io/gorm"
 )
@@ -46,7 +48,18 @@ func SaveAll(data interface{}) error {
 
 func GetAllWeather(condition interface{}) ([]Weather, error) {
 	db := common.GetDB()
-	var countries []Weather
-	err := db.Where(condition).Find(&countries).Error
-	return countries, err
+	var ws []Weather
+
+	now := time.Now().UTC()
+	err := db.Where(condition).Where("date_time >= ?", now.Unix()).Find(&ws).Error
+	return ws, err
+}
+
+func GetTodaysWeather(condition interface{}) (Weather, error) {
+	db := common.GetDB()
+	var w Weather
+
+	now := time.Now().UTC()
+	err := db.Where(condition).Where("date_time <= ?", now.Unix()).Order("date_time desc").First(&w).Error
+	return w, err
 }

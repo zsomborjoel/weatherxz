@@ -144,6 +144,7 @@ func FetchForAllCities() {
 func copyToCity(f *OpenWeatherForecastResponse, ci *cities.City) {
 	ci.CoordLat = f.City.Coord.Lat
 	ci.CoordLon = f.City.Coord.Lon
+	ci.Population = f.City.Population
 	ci.TimeZone = f.City.Timezone
 	ci.Sunrise = f.City.Sunrise
 	ci.Sunset = f.City.Sunset

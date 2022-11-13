@@ -4,7 +4,7 @@ import "github.com/gin-gonic/gin"
 
 type WeatherResponse struct {
 	ID                         uint    `json:"id"`
-	DateTime                   int     `json:"DateTime"`
+	DateTime                   int     `json:"dateTime"`
 	Temp                       float64 `json:"temp"`
 	FeelsLike                  float64 `json:"feelsLike"`
 	TempMin                    float64 `json:"tempMin"`
