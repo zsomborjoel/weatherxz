@@ -51,7 +51,8 @@ func GetAllWeather(condition interface{}) ([]Weather, error) {
 	var ws []Weather
 
 	now := time.Now().UTC()
-	err := db.Where(condition).Where("date_time >= ?", now.Unix()).Find(&ws).Error
+	ids := db.Select("MAX(id)").Where(condition).Where("date_time >= ?", now.Unix()).Group("date_time").Table("weathers")
+	err := db.Where("id IN (?)", ids).Order("date_time DESC").Find(&ws).Error
 	return ws, err
 }
 
