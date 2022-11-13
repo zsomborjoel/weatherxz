@@ -93,7 +93,7 @@ type cityinfo struct {
 	Sunset     int    `json:"sunset"`
 }
 
-const ITERATION_LEVEL = 50
+const iterationLevel = 50
 
 func FetchForAllCities() {
 	log.Info().Msg("WeatherForecast fetch for all cities started")
@@ -105,7 +105,7 @@ func FetchForAllCities() {
 
 	var savableWe = []weathers.Weather{}
 	for i, ci := range currCi {
-		if i%ITERATION_LEVEL == 0 && len(savableWe) > 0 {
+		if i%iterationLevel == 0 && len(savableWe) > 0 {
 			weathers.SaveAll(savableWe)
 			savableWe = []weathers.Weather{}
 
