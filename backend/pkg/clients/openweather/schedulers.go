@@ -16,6 +16,7 @@ func ScheduleLoad() {
 
 	_, err := taskScheduler.ScheduleWithCron(func(ctx context.Context) {
 		log.Info().Msg("Scheduled OpenWeatherForecast load")
+		FetchForAllCities()
 	}, cron)
 
 	if err == nil {

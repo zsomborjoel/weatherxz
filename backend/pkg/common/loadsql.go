@@ -7,7 +7,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-const Delimeter = ";"
+const delimeter = ";"
 
 func LoadSQLFile(sqlFile string) {
 	db := GetDB()
@@ -18,7 +18,7 @@ func LoadSQLFile(sqlFile string) {
 	}
 
 	var executed bool
-	for _, q := range strings.Split(string(file), Delimeter) {
+	for _, q := range strings.Split(string(file), delimeter) {
 		q := strings.TrimSpace(q)
 		if q == "" {
 			continue
