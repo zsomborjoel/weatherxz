@@ -126,7 +126,7 @@ func FetchForAllCities() {
 		for _, l := range f.List {
 			var w weathers.Weather
 			copyToWeather(&l, &w)
-			w.CityId = ci.ID
+			w.CityID = ci.ID
 			savableWe = append(savableWe, w)
 		}
 	}

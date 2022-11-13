@@ -31,7 +31,7 @@ type Weather struct {
 	RainVolume                 float64
 	SnowVolume                 float64
 	PartOfDay                  string
-	CityId                     uint
+	CityID                     uint `gorm:"foreignKey:CityRefer"`
 }
 
 func AutoMigrate() {

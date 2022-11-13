@@ -19,7 +19,7 @@ func WeathersRetrive(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 	}
 
-	weathers, err := GetAllWeather(&Weather{CityId: uint(cityIdUint)})
+	weathers, err := GetAllWeather(&Weather{CityID: uint(cityIdUint)})
 	if err != nil {
 		c.JSON(http.StatusNotFound, err)
 	}
@@ -35,7 +35,7 @@ func WeatherRetrive(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 	}
 
-	weather, err := GetTodaysWeather(&Weather{CityId: uint(cityIdUint)})
+	weather, err := GetTodaysWeather(&Weather{CityID: uint(cityIdUint)})
 	if err != nil {
 		c.JSON(http.StatusNotFound, err)
 	}
