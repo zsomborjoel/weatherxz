@@ -26,6 +26,7 @@
         "endOfLine": "auto",
         "bracketSpacing": true
       }],
+      "react/react-in-jsx-scope": "off",
       "@typescript-eslint/no-empty-function": ["off"],
       "@typescript-eslint/no-use-before-define": ["error"],
       "@typescript-eslint/explicit-function-return-type": ["error", {"allowExpressions": true}],
