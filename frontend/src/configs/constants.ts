@@ -1,8 +1,8 @@
 import { SERVER_URL } from './env';
 
 export const ENDPOINTS = {
-    CITY: `${SERVER_URL}/cities`,
-    WEATHER: `${SERVER_URL}/weathers`,
+    CITY: `${SERVER_URL}/api/cities`,
+    WEATHER: `${SERVER_URL}/api/weathers`,
 };
 
 export const ROUTES = {
