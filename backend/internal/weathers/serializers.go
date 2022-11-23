@@ -1,6 +1,10 @@
 package weathers
 
-import "github.com/gin-gonic/gin"
+import (
+	"math"
+
+	"github.com/gin-gonic/gin"
+)
 
 type WeatherResponse struct {
 	ID                         uint    `json:"id"`
@@ -24,6 +28,11 @@ type WeatherResponse struct {
 	RainVolume                 float64 `json:"rainVolume"`
 	SnowVolume                 float64 `json:"snowVolume"`
 	PartOfDay                  string  `json:"partOfDay"`
+	CityID                     uint    `json:"cityId	"`
+}
+
+func toCelsius(temp float64) float64 {
+	return math.Round(temp - 273.15)
 }
 
 type WeatherSerializer struct {
@@ -35,10 +44,10 @@ func (s *WeatherSerializer) Response() WeatherResponse {
 	r := WeatherResponse{
 		ID:                         s.Model.ID,
 		DateTime:                   s.DateTime,
-		Temp:                       s.Temp,
-		FeelsLike:                  s.FeelsLike,
-		TempMin:                    s.TempMin,
-		TempMax:                    s.TempMax,
+		Temp:                       toCelsius(s.Temp),
+		FeelsLike:                  toCelsius(s.FeelsLike),
+		TempMin:                    toCelsius(s.TempMin),
+		TempMax:                    toCelsius(s.TempMax),
 		Pressure:                   s.Pressure,
 		PreassureSeaLevel:          s.PreassureSeaLevel,
 		PreassureGroundLevel:       s.PreassureGroundLevel,
@@ -54,6 +63,7 @@ func (s *WeatherSerializer) Response() WeatherResponse {
 		RainVolume:                 s.RainVolume,
 		SnowVolume:                 s.SnowVolume,
 		PartOfDay:                  s.PartOfDay,
+		CityID:                     s.CityID,
 	}
 	return r
 }
