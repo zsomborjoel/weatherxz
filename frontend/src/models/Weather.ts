@@ -20,4 +20,5 @@ export interface Weather {
     rainVolume: number;
     snowVolume: number;
     partOfDay: string;
+    cityId: number;
 }

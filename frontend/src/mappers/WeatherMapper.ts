@@ -24,6 +24,7 @@ const dtoToModel = (dto: WeatherDTO): Weather => ({
     rainVolume: dto.rainVolume,
     snowVolume: dto.snowVolume,
     partOfDay: dto.partOfDay,
+    cityId: dto.cityId,
 });
 
 const dtoToModelArray = (dtos: WeatherDTO[]): Weather[] => dtos.map(dtoToModel);

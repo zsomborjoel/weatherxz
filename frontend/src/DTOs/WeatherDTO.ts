@@ -20,4 +20,5 @@ export interface WeatherDTO {
     rainVolume: number;
     snowVolume: number;
     partOfDay: string;
+    cityId: number;
 }
