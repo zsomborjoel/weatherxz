@@ -16,3 +16,5 @@ export const QUERIES = {
     GET_WEATHER_FORECAST: 'getWeatherForecast',
     GET_CURRENT_WEATHER: 'getCurrentWeather',
 };
+
+export const DEFAULT_STALE_TIME = 3600 * 1000; // 1 hour
