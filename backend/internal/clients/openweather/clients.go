@@ -101,11 +101,12 @@ func FetchForAllCities() {
 	currCi, err := cities.GetAllCity()
 	if err != nil {
 		log.Error().Stack().Err(err)
+		return
 	}
 
 	var savableWe = []weathers.Weather{}
 	for i, ci := range currCi {
-		if i%iterationLevel == 0 && len(savableWe) > 0 {
+		if i % iterationLevel == 0 && len(savableWe) > 0 {
 			weathers.SaveAll(savableWe)
 			savableWe = []weathers.Weather{}
 
@@ -115,12 +116,17 @@ func FetchForAllCities() {
 
 		log.Info().Msg(fmt.Sprintf("Currently processed city: [%s]", ci.Name))
 
-		f := fetchWeatherForecast(ci.Name)
-
-		copyToCity(&f, &ci)
-		err := cities.UpdateCity(&ci)
+		f, err := fetchWeatherForecast(ci.Name)
 		if err != nil {
 			log.Error().Stack().Err(err)
+			return
+		}
+
+		copyToCity(f, &ci)
+		err = cities.UpdateCity(&ci)
+		if err != nil {
+			log.Error().Stack().Err(err)
+			return
 		}
 
 		for _, l := range f.List {
@@ -135,6 +141,7 @@ func FetchForAllCities() {
 		err = weathers.SaveAll(savableWe)
 		if err != nil {
 			log.Error().Stack().Err(err)
+			return
 		}
 	}
 
@@ -177,15 +184,16 @@ func copyToWeather(l *List, w *weathers.Weather) {
 	w.PartOfDay = l.Sys.Pod
 }
 
-func fetchWeatherForecast(city string) (f OpenWeatherForecastResponse) {
-	ofu := os.Getenv("OPEN_WEATHER_URL")
-	aid := os.Getenv("OPEN_WEATHER_APP_ID")
+func fetchWeatherForecast(city string) (*OpenWeatherForecastResponse, error) {
+	var owfr OpenWeatherForecastResponse
 
+	ofu := os.Getenv("OPEN_WEATHER_URL")
 	base, err := url.Parse(ofu)
 	if err != nil {
-		log.Error().Stack().Err(err)
+		return nil, err
 	}
 
+	aid := os.Getenv("OPEN_WEATHER_APP_ID")
 	params := url.Values{}
 	params.Add("q", city)
 	params.Add("appid", aid)
@@ -193,16 +201,14 @@ func fetchWeatherForecast(city string) (f OpenWeatherForecastResponse) {
 
 	res, err := http.Get(base.String())
 	if err != nil {
-		log.Error().Stack().Err(err)
+		return nil, err
 	}
 
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		log.Error().Stack().Err(err)
+		return nil, err
 	}
 
-	var owfr OpenWeatherForecastResponse
 	json.Unmarshal(data, &owfr)
-
-	return owfr
+	return &owfr, nil
 }
