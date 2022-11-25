@@ -61,6 +61,6 @@ func GetTodaysWeather(condition interface{}) (Weather, error) {
 	var w Weather
 
 	now := time.Now().UTC()
-	err := db.Where(condition).Where("date_time <= ?", now.Unix()).Order("date_time desc").First(&w).Error
+	err := db.Where(condition).Where("date_time <= ?", now.Unix()).Order("date_time DESC").First(&w).Error
 	return w, err
 }
