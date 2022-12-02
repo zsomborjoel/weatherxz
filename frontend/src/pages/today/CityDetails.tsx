@@ -1,5 +1,6 @@
 import { FC, useContext, useEffect, useState } from 'react';
 import LoadingIndicator from '../../components/LoadingIndicator';
+import WeatherTypeImg from '../../components/WeatherTypeImg';
 import { CityContext } from '../../contexts/CityContext';
 import { City } from '../../models/City';
 import { useGetAllCity } from '../../queries/CityQuery';
@@ -31,7 +32,7 @@ const CityDetails: FC<Props> = () => {
             <div className="m-5 w-full">
                 <p className="h-1/6 text-center">Test</p>
                 <p className="h-1/6 flex justify-center">
-                    <img src="../../../weather/snow.png" className="mr-3 sm:h-9" alt="Weatherxz Logo" />
+                    <WeatherTypeImg value={todaysWeather?.weatherConditionMain} />
                 </p>
                 <div className="h-1/6 text-center flex justify-center">
                     <p className="font-extrabold text-center text-9xl text-white">{todaysWeather?.temp}</p>
