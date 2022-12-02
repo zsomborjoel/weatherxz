@@ -7,7 +7,7 @@ export type Props = {};
 
 const TodayPage: FC<Props> = () => (
     <CityContextProvider>
-        <div className="grid grid-cols-2 h-auto">
+        <div className="grid grid-cols-2 h-[calc(100vh-56px)] overflow-hidden">
             <CityDetails />
             <WeatherDetails />
         </div>

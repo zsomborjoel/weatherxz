@@ -23,27 +23,29 @@ const WeatherDetails: FC<Props> = () => {
                 <div className="grid grid-cols-3 gap-6">
                     <div className="relative overflow-hidden bg-no-repeat shadow-lg rounded-lg bg-slate-700 md:w-32 md:h-32 lg:h-40 lg:w-40 xl:w-72 xl:h-72">
                         <h2 className="text-white justify-center flex md:m-6 xl:m-14">Pressure</h2>
-                        <h1 className="text-white flex justify-center">{todaysWeather?.pressure}</h1>
+                        <h1 className="text-white flex justify-center">{`${todaysWeather?.pressure} hPa`}</h1>
                     </div>
                     <div className="relative overflow-hidden bg-no-repeat shadow-lg rounded-lg bg-slate-700 md:w-32 md:h-32 lg:h-40 lg:w-40 xl:w-72 xl:h-72">
                         <h2 className="m-3 text-white justify-center flex md:m-6 xl:m-14">Pop</h2>
-                        <h1 className="text-white flex justify-center">{todaysWeather?.probabilityOfPrecipitation}</h1>
+                        <h1 className="text-white flex justify-center">
+                            {`${todaysWeather?.probabilityOfPrecipitation ?? 0 * 100} %`}
+                        </h1>
                     </div>
                     <div className="relative overflow-hidden bg-no-repeat shadow-lg rounded-lg bg-slate-700 md:w-32 md:h-32 lg:h-40 lg:w-40 xl:w-72 xl:h-72">
                         <h2 className="m-3 text-white justify-center flex md:m-6 xl:m-14">Humidity</h2>
-                        <h1 className="text-white flex justify-center">{todaysWeather?.humidity}</h1>
+                        <h1 className="text-white flex justify-center">{`${todaysWeather?.humidity} %`}</h1>
                     </div>
                     <div className="relative overflow-hidden bg-no-repeat shadow-lg rounded-lg bg-slate-700 md:w-32 md:h-32 lg:h-40 lg:w-40 xl:w-72 xl:h-72">
                         <h2 className="m-3 text-white justify-center flex md:m-6 xl:m-14">Clouds</h2>
-                        <h1 className="text-white flex justify-center">{todaysWeather?.clouds}</h1>
+                        <h1 className="text-white flex justify-center">{`${todaysWeather?.clouds} %`}</h1>
                     </div>
                     <div className="relative overflow-hidden bg-no-repeat shadow-lg rounded-lg bg-slate-700 md:w-32 md:h-32 lg:h-40 lg:w-40 xl:w-72 xl:h-72">
                         <h2 className="m-3 text-white justify-center flex md:m-6 xl:m-14">Wind</h2>
-                        <h1 className="text-white flex justify-center">{todaysWeather?.windSpeed}</h1>
+                        <h1 className="text-white flex justify-center">{`${todaysWeather?.windSpeed} m/sec`}</h1>
                     </div>
                     <div className="relative overflow-hidden bg-no-repeat shadow-lg rounded-lg bg-slate-700 md:w-32 md:h-32 lg:h-40 lg:w-40 xl:w-72 xl:h-72">
                         <h2 className="m-3 text-white justify-center flex md:m-6 xl:m-14">Visibility</h2>
-                        <h1 className="text-white flex justify-center">{todaysWeather?.visibility}</h1>
+                        <h1 className="text-white flex justify-center">{`${todaysWeather?.visibility} m`}</h1>
                     </div>
                 </div>
             </div>
