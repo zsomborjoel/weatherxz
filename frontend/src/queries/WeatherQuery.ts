@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryResult } from 'react-query';
 import { DEFAULT_STALE_TIME, QUERIES } from '../configs/constants';
 import WeatherMapper from '../mappers/WeatherMapper';
 import { Weather } from '../models/Weather';
@@ -14,12 +14,12 @@ export const useGetWeatherForecastForCity = (cityId: number): Weather[] | undefi
         }
     ).data;
 
-export const useGetTodayWeatherForCity = (cityId: number): Weather | undefined =>
+export const useGetTodayWeatherForCity = (cityId: number): UseQueryResult<Weather | undefined> =>
     useQuery(
         QUERIES.GET_CURRENT_WEATHER,
         async () => WeatherService.getCurrentWeather(cityId).then((res) => WeatherMapper.dtoToModel(res.data)),
         {
             refetchOnWindowFocus: false,
-            staleTime: DEFAULT_STALE_TIME,
+            enabled: !!cityId,
         }
-    ).data;
+    );

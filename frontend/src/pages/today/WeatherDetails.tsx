@@ -10,7 +10,7 @@ const WeatherDetails: FC<Props> = () => {
         cityIdState: [cityId],
     } = useContext(CityContext);
 
-    const todaysWeather = useGetTodayWeatherForCity(cityId);
+    const { data: todaysWeather } = useGetTodayWeatherForCity(cityId);
 
     if (todaysWeather === undefined) {
         return <LoadingIndicator />;

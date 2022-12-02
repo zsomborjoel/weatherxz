@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { FC, useContext, useEffect, useState } from 'react';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import WeatherTypeImg from '../../components/WeatherTypeImg';
@@ -12,16 +13,22 @@ export type Props = {};
 const CityDetails: FC<Props> = () => {
     const [curretCity, setCurrentCity] = useState<City | undefined>();
     const {
-        cityIdState: [cityId],
+        cityIdState: [cityId, setCityId],
     } = useContext(CityContext);
 
     const cities = useGetAllCity();
-    const todaysWeather = useGetTodayWeatherForCity(cityId);
+    const { data: todaysWeather, refetch: todaysWeatherRefetch } = useGetTodayWeatherForCity(cityId);
 
     useEffect(() => {
         const foundCity = cities?.filter((city) => city.id === cityId);
         setCurrentCity(foundCity?.[0]);
     }, [cityId, cities]);
+
+    useEffect(() => {
+        todaysWeatherRefetch();
+    }, [cityId]);
+
+    const findSelectedCityId = (name: string): number | undefined => cities?.filter((c) => c.name === name)[0].id;
 
     if (cities === undefined && todaysWeather === undefined) {
         return <LoadingIndicator />;
@@ -30,7 +37,21 @@ const CityDetails: FC<Props> = () => {
     return (
         <div className="flex justify-center bg-slate-700">
             <div className="m-5 w-full">
-                <p className="h-1/6 text-center">Test</p>
+                <div className="h-1/6 text-center">
+                    <label htmlFor="cities" className="block mb-2 text-sm font-medium text-white">
+                        Select an option
+                    </label>
+                    <select
+                        id="cities"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        onChange={(e) => setCityId(findSelectedCityId(e.target.value)!)}
+                    >
+                        <option selected>Choose a country</option>
+                        {cities?.map((c) => (
+                            <option value={c.name}>{c.name}</option>
+                        ))}
+                    </select>
+                </div>
                 <p className="h-1/6 flex justify-center">
                     <WeatherTypeImg value={todaysWeather?.weatherConditionMain} />
                 </p>
