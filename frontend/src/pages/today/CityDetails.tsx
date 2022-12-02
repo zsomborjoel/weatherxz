@@ -30,7 +30,9 @@ const CityDetails: FC<Props> = () => {
         <div className="flex justify-center bg-slate-700">
             <div className="m-5 w-full">
                 <p className="h-1/6 text-center">Test</p>
-                <p className="h-1/6 text-center">Test</p>
+                <p className="h-1/6 flex justify-center">
+                    <img src="../../../weather/snow.png" className="mr-3 sm:h-9" alt="Weatherxz Logo" />
+                </p>
                 <div className="h-1/6 text-center flex justify-center">
                     <p className="font-extrabold text-center text-9xl text-white">{todaysWeather?.temp}</p>
                     <p className="font-light text-center text-6xl text-gray-500">°c</p>
