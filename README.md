@@ -1,5 +1,5 @@
 # Weatherxz
-Weather forecast system
+Weather forecast system - with automated data fetching from OpenWeather API
 
 ## 💻 Technologies
 
