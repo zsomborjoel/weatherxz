@@ -15,7 +15,8 @@ func CityRetrive(c *gin.Context) {
 	name := c.Param("name")
 	city, err := FindOneCity(&City{Name: name})
 	if err != nil {
-		c.JSON(http.StatusNotFound, err)
+		c.JSON(http.StatusNotFound, err.Error())
+		return
 	}
 
 	s := CitySerializer{c, city}
@@ -25,7 +26,8 @@ func CityRetrive(c *gin.Context) {
 func CitiesRetrive(c *gin.Context) {
 	cities, err := GetAllCity()
 	if err != nil {
-		c.JSON(http.StatusNotFound, err)
+		c.JSON(http.StatusNotFound, err.Error())
+		return
 	}
 
 	s := CitiesSerializer{c, cities}

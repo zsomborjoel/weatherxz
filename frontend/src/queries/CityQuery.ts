@@ -1,4 +1,4 @@
-import { useQuery, UseQueryResult } from 'react-query';
+import { useQuery } from 'react-query';
 import { QUERIES } from '../configs/constants';
 import CityMapper from '../mappers/CityMapper';
 import { City } from '../models/City';
